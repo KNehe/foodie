@@ -1,8 +1,9 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
 from django.db.utils import IntegrityError
+from django.urls import reverse
 
-from .models import Comment, Post
+from fapp.models import Comment, Post
 
 def createUser():
     """ A utility function to create a User """
@@ -81,3 +82,11 @@ class CommentModelTests(TestCase):
             post = Post.objects.create(body=body_text, created_by=user)
             Comment.objects.create(body=None, created_by=user, post=post)
 
+
+    def test_show_post(self):
+        """
+        A posts object should be present in template
+        """
+        response = self.client.get(reverse('fapp:home'))
+        self.assertEqual(response.status_code, 200)
+        self.assertQuerysetEqual(response.context['posts'], [])

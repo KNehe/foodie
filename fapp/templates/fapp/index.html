@@ -1,0 +1,30 @@
+{% extends 'main.html' %} {% block main %} 
+
+<form method="post" action="{% url 'fapp:addpost' %}">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <input type="submit" value="Submit" />
+</form>
+<!--list of posts-->
+{% if not posts %}
+<p>No posts available</p>
+{% endif %}
+{% for post in posts %}
+<style>
+    div{
+        white-space: pre-line;
+    }
+</style>
+<!-- use sections, articles, aside, h1, etc-->
+<div style="border: 1px solid black; margin-bottom:2px;">
+  <div>{{post.body}}</div>
+  <div>
+    <p>Upvote: {{post.up_vote}}</p>
+    <p>Downvote: {{post.down_vote}}</p>
+    <p>{{post.created_at | timesince}} ago</p>
+    <p>{{post.created_by}}</p>
+    <p>{{post.comment_set.all.count}} comments</p>
+  </div>
+</div>
+{% endfor %} 
+{% endblock %}
