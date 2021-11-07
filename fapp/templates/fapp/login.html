@@ -1,0 +1,11 @@
+{% extends 'main.html' %}
+
+{% block main %}
+<p>login</p>
+<form method="post">
+    {% csrf_token %}
+    {{form.as_p}}
+    <button type="submit">Login</button>
+</form>
+<p>Have no account? <a href="{% url 'fapp:register' %}">Register</a></p>
+{% endblock main %}
