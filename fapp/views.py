@@ -18,6 +18,12 @@ from django.core.mail import send_mail, BadHeaderError
 from .models import Post
 from .forms import CustomUserCreationForm, PostForm
 
+import environ
+
+env = environ.Env()
+
+environ.Env.read_env()
+
 def home(request):
 
     posts = Post.objects.all().order_by('-created_at')
@@ -71,7 +77,7 @@ def login_user(request):
     return render(request, 'fapp/login.html', context)
 
 def register(request):
-
+ 
     if request.user.is_authenticated:
         return redirect(reverse('fapp:home'))
 
@@ -80,7 +86,9 @@ def register(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            # TODO send email
+            message = 'Thank you for joining us. \n We are excited to have you'
+            from_email = env('FROM_EMAIL')
+            send_mail('Foodie App Registration', message, from_email, [request.POST['email']], fail_silently=True)
             return redirect(reverse('fapp:home'))
         messages.error(request, "\n".join([str(err) for err in form.error_messages.values()]))
         return redirect(reverse('fapp:register'))
@@ -115,8 +123,9 @@ def password_reset_request(request):
                         'protocol': 'http',
                     }
                     message = render_to_string(email_template_name, c)
+                    from_email = env('FROM_EMAIL')
                     try:
-                        send_mail(subject, message, "kamolunehemiah@gmail.com", [user.email], fail_silently=False)
+                        send_mail(subject, message, from_email, [user.email], fail_silently=True)
                     except BadHeaderError:
                         return HttpResponse('Invalid header found')
                     except Exception as e:
