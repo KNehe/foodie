@@ -7,5 +7,6 @@
     {{form.as_p}}
     <button type="submit">Login</button>
 </form>
+<p><a href="{% url 'fapp:password_reset' %}">Forgot password?</a></p>
 <p>Have no account? <a href="{% url 'fapp:register' %}">Register</a></p>
 {% endblock main %}
