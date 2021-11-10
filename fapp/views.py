@@ -13,9 +13,7 @@ from django.contrib.auth.tokens import default_token_generator
 from django.template.loader import render_to_string
 from django.core.mail import send_mail, BadHeaderError
 
-
-
-from .models import Post
+from .models import DownVote, Post, UpVote
 from .forms import CustomUserCreationForm, PostForm
 
 import environ
@@ -141,3 +139,54 @@ def password_reset_request(request):
     context={"password_reset_form":password_reset_form}
 
     return render(request, 'password/password_reset.html', context)
+
+@login_required(login_url='/login')
+def up_vote(request, pk):
+    """
+    If user has already voted - remove vote
+    If user has not voted - add vote
+    Remove user's down_vote when adding up_vote
+    Can't have up vote and down_vote at same time
+    """
+    try:
+        post = Post.objects.get(pk=pk)
+    except Post.DoesNotExist:
+        messages.error(request, "Can't upvote for unknown post")
+        return redirect(reverse("fapp:home"))
+    
+    up_vote = UpVote.objects.filter(Q(voted_by=request.user, post=post))
+    if up_vote:
+        up_vote.delete()
+    else:
+        down_vote = DownVote.objects.filter(Q(down_voted_by=request.user, post=post))
+        if down_vote:
+            down_vote.delete()
+        UpVote.objects.create(post=post, voted_by=request.user)
+    
+    return redirect(reverse("fapp:home") + f"#{post.id}")
+
+
+@login_required(login_url='/login')
+def down_vote(request, pk):
+    """
+    If user has already down voted - remove down_vote
+    If user has not down voted - add down_vote
+    Remove user's up_vote when adding down_vote
+    Can't have up vote and down_vote at same time
+    """
+    try:
+        post = Post.objects.get(pk=pk)
+    except Post.DoesNotExist:
+        messages.error(request, "Can't upvote for unknown post")
+        return redirect(reverse("fapp:home"))
+    
+    down_vote = DownVote.objects.filter(Q(down_voted_by=request.user, post=post))
+    if down_vote:
+        down_vote.delete()
+    else:
+        up_vote = UpVote.objects.filter(Q(post=post, voted_by=request.user))
+        if up_vote:
+            up_vote.delete()
+        DownVote.objects.create(post=post, down_voted_by=request.user)
+    
+    return redirect(reverse('fapp:home') + f"#{post.id}")

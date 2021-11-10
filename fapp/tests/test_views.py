@@ -1,10 +1,11 @@
+from django.http import response
 from django.test import TestCase, RequestFactory
 from django.urls import reverse
 from django.contrib.auth.models import User
 
 
 from fapp.models import Post
-from fapp.views import addpost as addpost_view, register as register_view
+from fapp.views import addpost as addpost_view, register as register_view, up_vote
 
 # Home view tests
 def createUser():
@@ -100,3 +101,11 @@ class LoginUserViewTests(TestCase):
         Should login user
         """
         pass
+
+class UpVoteTests(TestCase):
+
+    def setUp(self) -> None:
+        self.factory = RequestFactory()
+        self.user = User.objects.create_user(username="john doe", password="secret")
+        self.post = Post.objects.create(body={"foodie": "foodie"}, created_by=self.user)
+    
