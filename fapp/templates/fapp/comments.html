@@ -1,0 +1,51 @@
+{% extends 'main.html' %}
+
+{% block main %}
+
+<div>
+    {% for post in post %}
+    <div id="{{post.id}}">{{post.body}}</div>
+    <div>
+        <p>
+          <a href="{% url 'fapp:upvote' post.id %}"
+          >
+          Upvote: {{post.upvote_set.all.count}}
+          {% if request.user in post.upvote_set.all %}
+          <h1>h</h1>
+          {% endif %}
+          <!-- {% for item in post.upvote_set.all %}
+        <h1>{{ item.voted_by }}</h1>
+        {% endfor %} -->
+        </a>
+      </p>
+        <p>
+          <a href="{% url 'fapp:downvote' post.id %}">
+          Downvote: {{post.downvote_set.all.count}}
+          </a>
+        </p>
+        <p>{{post.created_at | timesince}} ago</p>
+        <p>posted by: {{post.created_by}}</p>
+        <p>
+          <a href="{% url 'fapp:comments' post.id %}">{{post.comment_set.all.count}} comment
+            {% if post.comment_set.all.count >= 2 %}
+            s
+            {% endif %}
+          </a>
+        </p>
+      </div>
+    {% endfor %}
+
+    
+    <h2>Comments</h2>
+    <form method="POST">
+      {% csrf_token %}
+      {{form}}
+      <input type="submit" />
+    </form>
+    {% for comment in comments %}
+    <p>{{comment.body}}</p>
+    <p>Commented by: {{comment.created_by}} {{comment.created_at | timesince}}</p>
+    <hr>
+    {% endfor %}
+</div>
+{% endblock main %}

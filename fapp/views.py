@@ -1,3 +1,4 @@
+from functools import reduce
 from django.http.response import HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
@@ -13,8 +14,8 @@ from django.contrib.auth.tokens import default_token_generator
 from django.template.loader import render_to_string
 from django.core.mail import send_mail, BadHeaderError
 
-from .models import DownVote, Post, UpVote
-from .forms import CustomUserCreationForm, PostForm
+from .models import Comment, DownVote, Post, UpVote
+from .forms import CommentForm, CustomUserCreationForm, PostForm
 
 import environ
 
@@ -190,3 +191,29 @@ def down_vote(request, pk):
         DownVote.objects.create(post=post, down_voted_by=request.user)
     
     return redirect(reverse('fapp:home') + f"#{post.id}")
+
+@login_required(login_url='/login')
+def comment(request, pk:str):
+    
+    post = Post.objects.filter(Q(pk=pk))
+    if not post or len(post) == 0:
+        messages.error(request, 'Post does not exist. No comments')
+        return redirect(reverse('fapp:home'))
+
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data['comment']
+            Comment.objects.create(body=data, created_by=request.user, post=post[0])
+            return redirect(reverse('fapp:comments', kwargs={'pk': pk}))
+        else:
+            messages.error(request, 'Invalid comment')
+            return redirect(reverse('fapp:home'))
+    
+    form = CommentForm()
+
+    comments = Comment.objects.filter(Q(post=post[0])).order_by('-created_at')
+    
+    context = {'post': post, 'comments': comments, 'form': form}
+
+    return render(request, 'fapp/comments.html', context)

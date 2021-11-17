@@ -22,3 +22,8 @@ class CustomUserCreationForm(UserCreationForm):
         if commit:
             user.save()
         return user
+
+class CommentForm(forms.Form):
+    comment = forms.CharField(label='',
+                               max_length=100,
+                               widget=forms.Textarea(attrs={'placeholder': 'Add a comment', 'rows':'5'}))
