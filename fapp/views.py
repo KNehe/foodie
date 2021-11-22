@@ -1,5 +1,3 @@
-from functools import reduce
-from os import error
 from django.http.response import HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
@@ -9,6 +7,7 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import AuthenticationForm, PasswordResetForm
 from django.contrib.auth.models import User
 from django.db.models.query_utils import Q
+from django.urls.base import is_valid_path
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
@@ -18,7 +17,7 @@ from django.utils.timezone import datetime
 from django.db.models import Count
 
 from .models import Comment, DownVote, Post, UpVote
-from .forms import CommentForm, CustomUserCreationForm, PostForm
+from .forms import CommentForm, CustomUserCreationForm, PostForm, ProfileForm
 
 import environ
 
@@ -238,8 +237,8 @@ def comment(request, pk:str):
 
     return render(request, 'fapp/comments.html', context)
 
-def show_user_profile(request, pk):
-        
+def show_user_profile(request, pk):        
+
         try:
             user = User.objects.get(pk=pk)
         except User.DoesNotExist:
@@ -247,7 +246,30 @@ def show_user_profile(request, pk):
             return redirect(reverse('fapp:home'))
         
         posts = Post.objects.filter(Q(created_by=user))
-        
+
         context = {'user': user, 'posts': posts}
         
         return render(request, 'fapp/profile.html', context)
+    
+@login_required(login_url='login')
+def edit_profile(request, pk):
+    
+    if request.method == 'POST':
+        form = ProfileForm(data=request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Profile updated !')
+            return redirect(reverse('fapp:edit_profile', kwargs={'pk':request.user.id}))
+        
+        messages.error(request, 'Invalid data found in form')
+        return redirect(reverse('fapp:edit_profile', kwargs={'pk':request.user.id}))
+    try:
+        user = User.objects.get(pk=pk)
+    except Post.DoesNotExist:
+       return HttpResponse('You do not have access')
+    
+    form = ProfileForm(instance=user)
+
+    context = {'form': form}
+
+    return render(request, 'fapp/edit_profile.html', context)

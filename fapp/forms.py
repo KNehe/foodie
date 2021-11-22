@@ -2,7 +2,6 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
-
 class PostForm(forms.Form):
     foodie = forms.CharField(label='',
                              max_length=200, 
@@ -27,3 +26,11 @@ class CommentForm(forms.Form):
     comment = forms.CharField(label='',
                                max_length=100,
                                widget=forms.Textarea(attrs={'placeholder': 'Add a comment', 'rows':'5'}))
+
+class ProfileForm(forms.ModelForm):
+    email = forms.EmailField(required=True)
+    username = forms.CharField(required=True)
+    
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'first_name', 'last_name']

@@ -9,15 +9,15 @@
 
     <!-- user details -->
     <section>
-    <p>Username: {{user.username}}</p>
-    {% if user.firstname %}
-    <p>First name: {{user.firstname}}</p>
+    <p>Username: {{user.username | title }}</p>
+    {% if user.first_name %}
+    <p>First name: {{user.first_name  | title }}</p>
     {% else %}
-    <p>First name: unkown</p>
+    <p>First name: unkown </p>
     {% endif %}
 
-    {% if user.lastname %}
-    <p>Last name: {{user.lastname}}</p>
+    {% if user.last_name %}
+    <p>Last name: {{user.last_name  | title}}</p>
     {% else %}
     <p>Last name: unkown</p>
     {% endif %}
@@ -65,7 +65,7 @@
     <section>
     <hr>
     {% if user == request.user %}
-    <a href=""> Edit profile </a>
+    <a href="{% url 'fapp:edit_profile' user.id %}"> Edit profile </a>
     <br>
     <a href=""> Delete account </a>
     {% endif %}

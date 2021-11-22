@@ -1,0 +1,14 @@
+{% extends 'main.html' %}
+
+{% block main %}
+
+<section>
+    <form method="post">
+        {% csrf_token %}
+        {{form.as_p}}
+        <a href="{{request.META.HTTP_REFERER}}">Cancel</a>
+        <button type="submit">Save changes</button>
+    </form>
+</section>
+
+{% endblock main %}

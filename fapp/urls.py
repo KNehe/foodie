@@ -18,5 +18,6 @@ urlpatterns = [
     path('upvote/<str:pk>', views.up_vote, name='upvote'),
     path('downvote/<str:pk>/', views.down_vote, name='downvote'),
     path('comments/post/<str:pk>', views.comment, name='comments'),
-    path('profile/<str:pk>', views.show_user_profile, name='profile')
+    path('profile/<str:pk>', views.show_user_profile, name='profile'),
+    path('edit_profile/<str:pk>', views.edit_profile, name="edit_profile")
 ]
