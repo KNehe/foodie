@@ -13,11 +13,15 @@ from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from django.template.loader import render_to_string
 from django.core.mail import send_mail, BadHeaderError
+from django.utils.timezone import datetime
+from django.db.models import Count
 
 from .models import Comment, DownVote, Post, UpVote
 from .forms import CommentForm, CustomUserCreationForm, PostForm
 
 import environ
+
+
 
 env = environ.Env()
 
@@ -27,9 +31,18 @@ def home(request):
 
     posts = Post.objects.all().order_by('-created_at')
 
+    date = datetime.today()
+    
+    popular = Post.objects.filter(Q(created_at__date=date)) \
+                  .annotate(count=Count('upvote')) \
+                  .order_by('-count')[:6] 
+    if not popular:
+        popular = Post.objects.all().annotate(count=Count('upvote')) \
+                                     .order_by('-count')[:4]
+        
     form = PostForm
-
-    context = {'posts': posts, 'form': form}
+    
+    context = {'posts': posts, 'form': form, 'popular': popular}
 
     return render(request, "fapp/index.html",context)
 

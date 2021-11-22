@@ -1,21 +1,49 @@
 {% extends 'main.html' %} {% block main %} 
 
+<style>
+  .container {
+    display: grid;
+    grid-template-columns: 1fr 3fr 1fr;
+    column-gap: 3em;
+  }
+</style>
+
+<!--container-->
+<section class="container">
+
+<!-- list of popular post-->
+<section>
+  <h2>Popular foodies</h2>
+  {% if not popular %}
+  Nothing found
+  {% endif %}
+
+  {% for post in popular %}
+  <a href="{% url 'fapp:comments' post.id %}">
+  {{post.body}}
+  <p>{{post.upvote_set.all.count}} Upvotes<p>
+  <p>{{post.downvote_set.all.count}} Downvotes</p>
+ <p>Posted by {{post.created_by}} {{post.created_at | timesince}} ago</p>
+  <hr>
+  {% endfor %}
+  </a>
+</section>
+<!-- end list of popular post-->
+
+
+<!--list of posts-->
+<section>
 <form method="post" action="{% url 'fapp:addpost' %}">
   {% csrf_token %}
   {{ form.as_p }}
   <input type="submit" value="Submit" />
 </form>
-<!--list of posts-->
+
 {% if not posts %}
 <p>No posts available</p>
 {% endif %}
 {% for post in posts %}
-<style>
-    div{
-        white-space: pre-line;
-    }
-</style>
-<!-- use sections, articles, aside, h1, etc-->
+
 <div id="{{post.id}}" style="border: 1px solid black; margin-bottom:2px;">
   <div>{{post.body}}</div>
   <div>
@@ -48,4 +76,20 @@
   </div>
 </div>
 {% endfor %} 
+</section>
+<!-- end list of  posts-->
+
+<!-- Ads-->
+<section>
+  <h2>Your Recent foodies</h2>
+  {% if not recent %}
+   You haven't posted yet
+  {% endif %}
+</section>
+<!-- end of Ads-->
+
+</section>
+<!-- end of container-->
+
+
 {% endblock %}
