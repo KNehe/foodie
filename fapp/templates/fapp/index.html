@@ -82,9 +82,21 @@
 <!-- Ads-->
 <section>
   <h2>Your Recent foodies</h2>
-  {% if not recent %}
-   You haven't posted yet
+  
+  {% if not request.user.is_authenticated %}
+  <p><a href="{% url 'fapp:login' %}">Sign in to see recent foodies</a></p>
+  {% elif not recent %}
+   <p> You haven't posted a foodie yet </p>
   {% endif %}
+
+  {% for post in recent %}
+  <a href="{% url 'fapp:comments' post.id %}">
+  {{post.body}}
+  <p>{{post.upvote_set.all.count}} Upvotes<p>
+  <p>{{post.downvote_set.all.count}} Downvotes</p>
+  <hr>
+  {% endfor %}
+  </a>
 </section>
 <!-- end of Ads-->
 

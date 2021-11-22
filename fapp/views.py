@@ -39,10 +39,16 @@ def home(request):
     if not popular:
         popular = Post.objects.all().annotate(count=Count('upvote')) \
                                      .order_by('-count')[:4]
-        
+    
+    if request.user.is_authenticated:
+        recent = Post.objects.filter(Q(created_by=request.user)) \
+                          .order_by('-created_at')[:4]
+    else:
+        recent = None
+
     form = PostForm
     
-    context = {'posts': posts, 'form': form, 'popular': popular}
+    context = {'posts': posts, 'form': form, 'popular': popular, 'recent': recent}
 
     return render(request, "fapp/index.html",context)
 
