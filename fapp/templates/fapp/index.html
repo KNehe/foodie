@@ -65,7 +65,7 @@
       </a>
     </p>
     <p>{{post.created_at | timesince}} ago</p>
-    <p>posted by:  {{post.created_by}}</p>
+    <p>posted by:  <a href="{% url 'fapp:profile' post.created_by.id %}">{{post.created_by}} </a></p>
     <p>
       <a href="{% url 'fapp:comments' post.id %}">{{post.comment_set.all.count}} comment
         {% if post.comment_set.all.count >= 2 %}

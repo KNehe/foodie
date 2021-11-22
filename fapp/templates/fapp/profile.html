@@ -1,0 +1,75 @@
+{% extends 'main.html' %}
+
+{% block main %}
+
+<section>
+    <section>
+        <img src="" alt="user profile picture" />
+    </section>
+
+    <!-- user details -->
+    <section>
+    <p>Username: {{user.username}}</p>
+    {% if user.firstname %}
+    <p>First name: {{user.firstname}}</p>
+    {% else %}
+    <p>First name: unkown</p>
+    {% endif %}
+
+    {% if user.lastname %}
+    <p>Last name: {{user.lastname}}</p>
+    {% else %}
+    <p>Last name: unkown</p>
+    {% endif %}
+    <p>Email: {{user.email}}</p>
+    </section>
+    <!-- end user details -->
+
+    <hr>
+    <!-- Posts by user -->
+    <section>
+        <h2>Foodies by {{user}}</h2>
+        {% if not posts %}
+        <p>{{user}} has not created a foodie since they joined</p>
+        {% endif %}
+        {% for post in posts %}<div id="{{post.id}}" style="border: 1px solid black; margin-bottom:2px;">
+            <div>{{post.body}}</div>
+            <div>
+              <p>
+                <a href="{% url 'fapp:upvote' post.id %}"
+                >
+                Upvote: {{post.upvote_set.all.count}}
+              </a>
+            </p>
+              <p>
+                <a href="{% url 'fapp:downvote' post.id %}">
+                Downvote: {{post.downvote_set.all.count}}
+                </a>
+              </p>
+              <p>{{post.created_at | timesince}} ago</p>
+              <p>
+                <a href="{% url 'fapp:comments' post.id %}">{{post.comment_set.all.count}} comment
+                  {% if post.comment_set.all.count >= 2 %}
+                  s
+                  {% endif %}
+                </a>
+              </p>
+            </div>
+          </div>
+
+        {% endfor %}
+    </section>
+    <!-- End of posts by user -->
+    
+    <!-- Security -->
+    <section>
+    <hr>
+    {% if user == request.user %}
+    <a href=""> Edit profile </a>
+    <br>
+    <a href=""> Delete account </a>
+    {% endif %}
+    </section>
+    <!-- end of security -->
+</section>
+{% endblock main %}

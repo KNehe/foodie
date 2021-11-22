@@ -17,5 +17,6 @@ urlpatterns = [
     path("password_reset/", views.password_reset_request, name="password_reset"),
     path('upvote/<str:pk>', views.up_vote, name='upvote'),
     path('downvote/<str:pk>/', views.down_vote, name='downvote'),
-    path('comments/post/<str:pk>', views.comment, name='comments')
+    path('comments/post/<str:pk>', views.comment, name='comments'),
+    path('profile/<str:pk>', views.show_user_profile, name='profile')
 ]

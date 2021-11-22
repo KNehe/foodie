@@ -19,7 +19,7 @@ class Comment(models.Model):
         return self.body
 
 class UpVote(models.Model):
-    voted_by = models.OneToOneField(User, on_delete=models.CASCADE)
+    voted_by = models.ForeignKey(User, on_delete=models.CASCADE)
     post = models.ForeignKey(Post,on_delete=models.CASCADE)
     voted_at = models.DateTimeField(auto_now_add=True)
 
@@ -27,7 +27,7 @@ class UpVote(models.Model):
         return f"User={self.voted_by} : Post = {self.post}"
 
 class DownVote(models.Model):
-    down_voted_by = models.OneToOneField(User, on_delete=models.CASCADE)
+    down_voted_by = models.ForeignKey(User, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     down_voted_at = models.DateTimeField(auto_now_add=True)
 

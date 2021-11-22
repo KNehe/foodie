@@ -1,4 +1,5 @@
 from functools import reduce
+from os import error
 from django.http.response import HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
@@ -236,3 +237,17 @@ def comment(request, pk:str):
     context = {'post': post, 'comments': comments, 'form': form}
 
     return render(request, 'fapp/comments.html', context)
+
+def show_user_profile(request, pk):
+        
+        try:
+            user = User.objects.get(pk=pk)
+        except User.DoesNotExist:
+            messages.error(request, 'User unknown')
+            return redirect(reverse('fapp:home'))
+        
+        posts = Post.objects.filter(Q(created_by=user))
+        
+        context = {'user': user, 'posts': posts}
+        
+        return render(request, 'fapp/profile.html', context)
