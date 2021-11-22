@@ -67,7 +67,7 @@
     {% if user == request.user %}
     <a href="{% url 'fapp:edit_profile' user.id %}"> Edit profile </a>
     <br>
-    <a href=""> Delete account </a>
+    <a href="{% url 'fapp:delete_account' user.id %}" onclick="deleteObject(event, 'DELETE_ACCOUNT')"> Delete account </a>
     {% endif %}
     </section>
     <!-- end of security -->

@@ -273,3 +273,15 @@ def edit_profile(request, pk):
     context = {'form': form}
 
     return render(request, 'fapp/edit_profile.html', context)
+
+
+@login_required(login_url='login')
+def delete_account(request, pk):
+    
+    user = User.objects.filter(id=pk)
+    
+    logout(request)
+
+    user.delete()
+
+    return redirect(reverse('fapp:home'))
