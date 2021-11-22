@@ -6,7 +6,7 @@
     <form method="post">
         {% csrf_token %}
         {{form.as_p}}
-        <a href="{{request.META.HTTP_REFERER}}">Cancel</a>
+        <a href="{% url 'fapp:profile' request.user.id %}">Cancel</a>
         <button type="submit">Save changes</button>
     </form>
 </section>
