@@ -15,11 +15,13 @@ from django.core.mail import send_mail, BadHeaderError
 from django.utils.timezone import datetime
 from django.db.models import Count
 
+from fapp.helpers import up_vote_down_vote_helper
+
 from .models import Comment, DownVote, Post, UpVote, User
 from .forms import CommentForm, CustomUserCreationForm, PostForm, ProfileForm
 
 import environ
-
+import re
 
 
 env = environ.Env()
@@ -182,9 +184,22 @@ def up_vote(request, pk):
         if down_vote:
             down_vote.delete()
         UpVote.objects.create(post=post, voted_by=request.user)
-    
-    return redirect(reverse("fapp:home") + f"#{post.id}")
 
+    # Common code- found in down_vote(request,pk). Should be refactored
+    referer = request.META['HTTP_REFERER']
+    
+    comment_search = re.search(r'/comments/post/', referer)
+    
+    if comment_search:
+        return redirect(reverse('fapp:comments', kwargs={'pk': post.id }))
+    
+    profile_search = re.search(r'/profile/', referer)
+
+    if profile_search:
+        user_id = referer[-1:]
+        return redirect(reverse('fapp:profile', kwargs={'pk':user_id}))
+
+    return redirect(reverse("fapp:home") + f"#{post.id}")
 
 @login_required(login_url='/login')
 def down_vote(request, pk):
@@ -208,6 +223,20 @@ def down_vote(request, pk):
         if up_vote:
             up_vote.delete()
         DownVote.objects.create(post=post, down_voted_by=request.user)
+    
+    # Common code- found in up_vote(request,pk). Should be refactored
+    referer = request.META['HTTP_REFERER']
+    
+    comment_search = re.search(r'/comments/post/', referer)
+    
+    if comment_search:
+        return redirect(reverse('fapp:comments', kwargs={'pk': post.id }))
+    
+    profile_search = re.search(r'/profile/', referer)
+
+    if profile_search:
+        user_id = referer[-1:]
+        return redirect(reverse('fapp:profile', kwargs={'pk':user_id}))
     
     return redirect(reverse('fapp:home') + f"#{post.id}")
 
