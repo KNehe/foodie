@@ -44,7 +44,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'fapp.apps.FappConfig'
+    'fapp.apps.FappConfig',
+    'tailwind',
+    'theme'
 ]
 
 MIDDLEWARE = [
@@ -149,4 +151,10 @@ EMAIL_USE_TLS = env('EMAIL_USE_TLS')
 
 AUTH_USER_MODEL = 'fapp.User'
 
+TAILWIND_APP_NAME = 'theme'
 
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
+
+NPM_BIN_PATH = r"D:\NodeJs\npm.cmd"
