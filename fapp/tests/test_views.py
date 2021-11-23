@@ -1,7 +1,6 @@
-from django.http import response
 from django.test import TestCase, RequestFactory
 from django.urls import reverse
-from django.contrib.auth.models import User
+from fapp.models import User
 
 
 from fapp.models import Post

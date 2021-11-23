@@ -1,8 +1,8 @@
 from django.test import TestCase
-from django.contrib.auth.models import User
 from django.db.utils import IntegrityError
 from django.urls import reverse
 from django.db.models.query_utils import Q
+from fapp.models import User
 
 
 from fapp.models import Comment, DownVote, Post, UpVote

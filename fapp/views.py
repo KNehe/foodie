@@ -5,7 +5,6 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import AuthenticationForm, PasswordResetForm
-from django.contrib.auth.models import User
 from django.db.models.query_utils import Q
 from django.urls.base import is_valid_path
 from django.utils.http import urlsafe_base64_encode
@@ -16,7 +15,7 @@ from django.core.mail import send_mail, BadHeaderError
 from django.utils.timezone import datetime
 from django.db.models import Count
 
-from .models import Comment, DownVote, Post, UpVote
+from .models import Comment, DownVote, Post, UpVote, User
 from .forms import CommentForm, CustomUserCreationForm, PostForm, ProfileForm
 
 import environ
@@ -75,9 +74,10 @@ def login_user(request):
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
-            username = form.cleaned_data.get('username')
+            email = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
-            user = authenticate(username=username, password=password)
+            print(f"auth{email, password}")
+            user = authenticate(email=email, password=password)
             if user is not None:
                 login(request, user)
                 return redirect(reverse('fapp:home'))
