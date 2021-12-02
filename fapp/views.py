@@ -6,7 +6,6 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import AuthenticationForm, PasswordResetForm
 from django.db.models.query_utils import Q
-from django.urls.base import is_valid_path
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
@@ -15,7 +14,7 @@ from django.core.mail import send_mail, BadHeaderError
 from django.utils.timezone import datetime
 from django.db.models import Count
 
-from fapp.helpers import up_vote_down_vote_helper
+from fapp.helpers import get_side_bars_data
 
 from .models import Comment, DownVote, Post, UpVote, User
 from .forms import CommentForm, CustomUserCreationForm, PostForm, ProfileForm
@@ -34,18 +33,7 @@ def home(request):
 
     date = datetime.today()
     
-    popular = Post.objects.filter(Q(created_at__date=date)) \
-                  .annotate(count=Count('upvote')) \
-                  .order_by('-count')[:6] 
-    if not popular:
-        popular = Post.objects.all().annotate(count=Count('upvote')) \
-                                     .order_by('-count')[:4]
-    
-    if request.user.is_authenticated:
-        recent = Post.objects.filter(Q(created_by=request.user)) \
-                          .order_by('-created_at')[:4]
-    else:
-        recent = None
+    popular, recent = get_side_bars_data(request)
 
     form = PostForm
     
@@ -258,11 +246,14 @@ def comment(request, pk:str):
             messages.error(request, 'Invalid comment')
             return redirect(reverse('fapp:home'))
     
+    popular, recent = get_side_bars_data(request)
+
+    
     form = CommentForm()
 
     comments = Comment.objects.filter(Q(post=post[0])).order_by('-created_at')
     
-    context = {'post': post, 'comments': comments, 'form': form}
+    context = {'post': post, 'comments': comments, 'form': form, 'popular': popular, 'recent': recent}
 
     return render(request, 'fapp/comments.html', context)
 
@@ -276,7 +267,9 @@ def show_user_profile(request, pk):
         
         posts = Post.objects.filter(Q(created_by=user))
 
-        context = {'user': user, 'posts': posts}
+        popular, recent = get_side_bars_data(request)
+
+        context = {'user': user, 'posts': posts, 'popular': popular, 'recent':recent}
         
         return render(request, 'fapp/profile.html', context)
     

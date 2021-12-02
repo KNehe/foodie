@@ -5,7 +5,9 @@ from .models import User
 class PostForm(forms.Form):
     foodie = forms.CharField(label='',
                              max_length=200, 
-                             widget=forms.Textarea(attrs={'placeholder': 'Best meal to have today ?'}))
+                             widget=forms.Textarea(
+                             attrs={'placeholder': 'Best meal to have today ?', 'rows': '4',
+                                    'class':'input', 'style':'resize:none;'}))
 
 class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(required=True)
@@ -24,7 +26,9 @@ class CustomUserCreationForm(UserCreationForm):
 class CommentForm(forms.Form):
     comment = forms.CharField(label='',
                                max_length=100,
-                               widget=forms.Textarea(attrs={'placeholder': 'Add a comment', 'rows':'5'}))
+                               widget=forms.Textarea(attrs={'placeholder': 'Add a comment',
+                                                            'rows':'5',
+                                                            'style':'resize:none;border-radius:8px;'}))
 
 class ProfileForm(forms.ModelForm):
     email = forms.EmailField(required=True)

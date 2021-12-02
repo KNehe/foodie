@@ -1,75 +1,179 @@
 {% extends 'main.html' %}
 
 {% block main %}
+{% load static %}
+<section class="container">
 
-<section>
-    <section>
-        <img src="" alt="user profile picture" />
-    </section>
-
+  <!-- list of popular post-->
+  {% include 'fapp/popular.html' %}
+  <!-- end list of popular post-->
+   
+  <!--middle-->
+  <section class="middle">
+    
     <!-- user details -->
-    <section>
-    <p>Username: {{user.username | title }}</p>
-    {% if user.first_name %}
-    <p>First name: {{user.first_name  | title }}</p>
-    {% else %}
-    <p>First name: unkown </p>
-    {% endif %}
+    <section class="user_info">
+        <img src="" alt="user profile picture" />
+        <section class="bio">
+            <p>Username: {{user.username | title }}</p>
+            {% if user.first_name %}
+            <p>First name: {{user.first_name  | title }}</p>
+            {% else %}
+            <p>First name: unkown </p>
+            {% endif %}
 
-    {% if user.last_name %}
-    <p>Last name: {{user.last_name  | title}}</p>
-    {% else %}
-    <p>Last name: unkown</p>
-    {% endif %}
-    <p>Email: {{user.email}}</p>
-    </section>
+            {% if user.last_name %}
+            <p>Last name: {{user.last_name  | title}}</p>
+            {% else %}
+            <p>Last name: unkown</p>
+            {% endif %}
+            <p>Email: {{user.email}}</p>
+        </section>
+  </section>
     <!-- end user details -->
 
-    <hr>
     <!-- Posts by user -->
     <section>
         <h2>Foodies by {{user}}</h2>
+
         {% if not posts %}
         <p>{{user}} has not created a foodie since they joined</p>
         {% endif %}
-        {% for post in posts %}<div id="{{post.id}}" style="border: 1px solid black; margin-bottom:2px;">
-            <div>{{post.body}}</div>
-            <div>
-              <p>
-                <a href="{% url 'fapp:upvote' post.id %}"
-                >
-                Upvote: {{post.upvote_set.all.count}}
-              </a>
-            </p>
-              <p>
-                <a href="{% url 'fapp:downvote' post.id %}">
-                Downvote: {{post.downvote_set.all.count}}
+
+        {% for post in posts %}
+        <div id="{{post.id}}" class="foodies">
+            <section class="foodie_content">
+              <div id="{{post.id}}" style="white-space: pre;">
+                <strong>{{post.body}}</strong>
+              </div>
+              <small>{{post.created_at | timesince}}</small>
+              <div class="foodie_actions">
+                <a href="{% url 'fapp:upvote' post.id %}" title="Up vote">
+                  <img src="{% static 'images/upvote.png' %}" alt="up vote icon">
+                  {{post.upvote_set.all.count}}
                 </a>
-              </p>
-              <p>{{post.created_at | timesince}} ago</p>
-              <p>
-                <a href="{% url 'fapp:comments' post.id %}">{{post.comment_set.all.count}} comment
-                  {% if post.comment_set.all.count >= 2 %}
-                  s
-                  {% endif %}
+                <a href="{% url 'fapp:downvote' post.id %}" title="Down vote">
+                  <img src="{% static 'images/icons8-thumbs-down-24.png' %}" alt="down_vote_icon">
+                  {{post.downvote_set.all.count}}
                 </a>
-              </p>
-            </div>
-          </div>
+                <a href="{% url 'fapp:comments' post.id %}" title="Comments">
+      
+                  <img src="{% static 'images/icons8-comments-26.png' %}" alt="down_vote_icon">
+      
+                  {{post.comment_set.all.count}}
+                </a>
+              </div>
+            </section>
+        </div>
 
         {% endfor %}
     </section>
     <!-- End of posts by user -->
     
     <!-- Security -->
-    <section>
-    <hr>
-    {% if user == request.user %}
-    <a href="{% url 'fapp:edit_profile' user.id %}"> Edit profile </a>
-    <br>
-    <a href="{% url 'fapp:delete_account' user.id %}" onclick="deleteObject(event, 'DELETE_ACCOUNT')"> Delete account </a>
-    {% endif %}
+    <section class="security">
+      
+      {% if user == request.user %}
+      <a href="{% url 'fapp:edit_profile' user.id %}"> Edit profile </a>
+      <br>
+      <a href="{% url 'fapp:delete_account' user.id %}" onclick="deleteObject(event, 'DELETE_ACCOUNT')"> Delete account </a>
+      {% endif %}
     </section>
     <!-- end of security -->
+
+  </section>
+  <!--end of middle --> 
+
+   <!-- Your recent foodies-->
+   {% include 'fapp/recent.html' %}
+   <!-- Your recent foodies-->
+  
 </section>
+
+
+<style>
+  .container {
+    display: grid;
+    grid-template-columns: 1fr 3fr 1fr;
+    column-gap: 1rem;
+    width: 80%;
+    margin: 0 auto;
+  }
+  .middle {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  .user_info {
+    display: flex;
+    flex-direction: column;
+    border:  1px solid grey;
+    border-radius: 8px;
+    padding-top: 1rem;
+  }
+  .user_info > img {
+    background-color: black;
+    height: 5rem;
+    width: 5rem;
+    align-self: center;
+    justify-self: center;
+    border-radius: 50%;
+  }
+  .user_info > .bio {
+    padding: 1rem;
+  }
+  .foodies {
+    border: 1px solid grey; 
+    margin-bottom: 1rem;
+    padding: 1rem;
+    border-radius: 8px;
+  }
+  .foodie_content > .foodie_actions{
+    margin-top: 1rem;
+    display: flex;
+    justify-content: space-between;
+  }
+  .security {
+    display: flex;
+    margin-bottom: 1rem;
+    justify-content: space-between;
+  }
+  .security > a {
+    border: 1px solid grey;
+    padding: .5rem;
+    border-radius: 8px;
+  }
+  .security > a:last-of-type {
+    border: 1px solid red;
+  }
+  @media screen and (max-width: 1016px) {
+    .container {
+    grid-template-columns: 1fr 3fr;
+    column-gap: .5rem;
+    width: 95%;
+  }
+  .recent_main {
+    display: none;
+  }
+}
+@media screen and (max-width: 682px) {
+  .container {
+    grid-template-columns: 1fr;
+    width: 100%;
+    margin: 0 .5rem;
+  }
+  .popular_main , .recent_main{
+    display: none;
+  }
+  .middle_col {
+    width: 85%;
+  }
+  .add_post {
+    width: 85%;
+    align-self: center;
+  }
+  
+}
+</style>
+
 {% endblock main %}
