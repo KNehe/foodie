@@ -29,9 +29,9 @@ environ.Env.read_env()
 
 def home(request):
 
-    posts = Post.objects.all().order_by('-created_at')
+    q = request.GET.get('search') if request.GET.get('search') != None else ''
 
-    date = datetime.today()
+    posts = Post.objects.filter(body__icontains=q).order_by('-created_at')
     
     popular, recent = get_side_bars_data(request)
 
