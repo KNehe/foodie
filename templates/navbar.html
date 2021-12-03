@@ -19,14 +19,19 @@
     outline: hsl(0, 0%, 50%) solid 1px;
 }
 .avatar {
-    background-color: black;
     height: 2rem;
     width: 2rem;
     border-radius: 50%;
-    color: white;
     display: grid;
     place-items: center;
     margin-right: .5rem;
+}
+.avatar > img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border: 1px solid hsl(0, 0%, 60%);
+    border-radius: 50%;
 }
 .dropdown, p{
 margin: 0;
@@ -76,7 +81,7 @@ position: relative;
    </a>
 
    <!--Search field-->
-   <form action="" method="get" class="search_input">
+   <form action="{% url 'fapp:home' %}" method="get" class="search_input">
      <input 
         placeholder="Find a foodie" 
         name="search"
@@ -94,8 +99,10 @@ position: relative;
         
         <li class="dropdown">
             <div class="dropdown_visible">
-                <div class="avatar">Av</div>
-                <p>{{user.username}}</p>
+                <div class="avatar">
+                    <img src="{{user.avatar.url}}" alt="" />
+                </div>
+                <p>{{user.username | capfirst }}</p>
             </div>
             <div class="dropdown_toggle">
                 <a href="{% url 'fapp:home' %}">Home</a>

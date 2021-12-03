@@ -13,21 +13,21 @@
     
     <!-- user details -->
     <section class="user_info">
-        <img src="" alt="user profile picture" />
+        <img src="{{user.avatar.url}}" alt="user profile picture" />
         <section class="bio">
-            <p>Username: {{user.username | title }}</p>
+            <p><span class="bold">Username:</span> {{user.username | title }}</p>
             {% if user.first_name %}
-            <p>First name: {{user.first_name  | title }}</p>
+            <p><span class="bold">First name:</span> {{user.first_name  | title }}</p>
             {% else %}
-            <p>First name: unkown </p>
+            <p><span class="bold">First name:</span> unkown </p>
             {% endif %}
 
             {% if user.last_name %}
-            <p>Last name: {{user.last_name  | title}}</p>
+            <p><span class="bold">Last name:</span> {{user.last_name  | title}}</p>
             {% else %}
-            <p>Last name: unkown</p>
+            <p><span class="bold">Last name:</span> unkown</p>
             {% endif %}
-            <p>Email: {{user.email}}</p>
+            <p><span class="bold">Email:</span> {{user.email}}</p>
         </section>
   </section>
     <!-- end user details -->
@@ -37,14 +37,14 @@
         <h2>Foodies by {{user}}</h2>
 
         {% if not posts %}
-        <p>{{user}} has not created a foodie since they joined</p>
+        <p>{{user | capfirst }} has not created a foodie since they joined</p>
         {% endif %}
 
         {% for post in posts %}
         <div id="{{post.id}}" class="foodies">
             <section class="foodie_content">
               <div id="{{post.id}}" style="white-space: pre;">
-                <strong>{{post.body}}</strong>
+                <strong>{{post.body | capfirst}}</strong>
               </div>
               <small>{{post.created_at | timesince}}</small>
               <div class="foodie_actions">
@@ -107,17 +107,16 @@
   .user_info {
     display: flex;
     flex-direction: column;
-    border:  1px solid grey;
     border-radius: 8px;
     padding-top: 1rem;
   }
   .user_info > img {
-    background-color: black;
-    height: 5rem;
-    width: 5rem;
+    height: 6rem;
+    width: 6rem;
     align-self: center;
     justify-self: center;
     border-radius: 50%;
+    border: 1px solid hsl(0, 0%, 60%);
   }
   .user_info > .bio {
     padding: 1rem;
@@ -155,6 +154,9 @@
   .recent_main {
     display: none;
   }
+  .bold {
+    font-weight: 700;
+  }
 }
 @media screen and (max-width: 682px) {
   .container {
@@ -171,6 +173,9 @@
   .add_post {
     width: 85%;
     align-self: center;
+  }
+  .foodies , .security{
+    width: 95%;
   }
   
 }

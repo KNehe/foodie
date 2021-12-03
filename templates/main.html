@@ -1,6 +1,7 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -11,30 +12,41 @@
     <script defer src="{% static 'js/app.js' %}"></script>
     <title>Foodie</title>
     <style>
-    .app_container{
-    display: flex;
-    flex-direction: column;
-}
+        .app_container {
+            display: flex;
+            flex-direction: column;
+        }
 
-.main_content{
-margin-top: 3rem;
-}
+        .main_content {
+            margin-top: 3rem;
+        }
+
+        .message {
+            text-align: center;
+            padding: 1rem;
+            background: rgb(238, 234, 230);
+            width: 40%;
+            margin: 0 auto;
+            margin-bottom: 1rem;
+            border-radius: 8px;
+        }
     </style>
 </head>
-<body>
+
+<body style="user-select: none;">
     <div class="app_container">
         {% include 'navbar.html' %}
         <main class="main_content">
             {% if messages %}
-                {% for message in messages %}
-                    {{ message }}
-                {% endfor %}
+            {% for message in messages %}
+            <p class="message">{{ message }}</p>
+            {% endfor %}
             {% endif %}
-
             {% block main %}
             {% endblock main%}
         </main>
         {% include 'footer.html' %}
     </div>
 </body>
+
 </html>

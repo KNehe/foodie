@@ -16,7 +16,9 @@
     <div class="group">
 
       <div class="top">
-        <div class="user_pic">AV</div>
+        <div class="user_pic">
+          <img src="{{post.created_by.avatar.url}}" alt="" />
+        </div>
         <div>
           <strong class="username">
             <a href="{% url 'fapp:profile' post.created_by.id %}">
@@ -28,7 +30,7 @@
       </div>
 
       <section class="content">
-        <div id="{{post.id}}" style="white-space: pre;">{{post.body}}</div>
+        <div id="{{post.id}}" style="white-space: pre;">{{post.body | capfirst}}</div>
 
         <div class="actions">
           <a href="{% url 'fapp:upvote' post.id %}" title="Up vote">
@@ -68,7 +70,9 @@
     <section class="single_comment">
 
       <div class="top">
-        <div class="user_pic">Av</div>
+        <div class="user_pic">
+          <img src="{{comment.created_by.avatar.url}}" alt=""/>
+        </div>
 
         <div>
           <strong class="username">
@@ -121,15 +125,17 @@
   }
 
   .user_pic {
-    background-color: black;
     height: 2.5rem;
     width: 2.5rem;
     border-radius: 100%;
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     margin-right: .2rem;
+  }
+  .user_pic > img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border: 1px solid hsl(0, 0%, 60%);
+    border-radius: 50%;
   }
 
   .comment_section .content {

@@ -277,7 +277,7 @@ def show_user_profile(request, pk):
 def edit_profile(request, pk):
     
     if request.method == 'POST':
-        form = ProfileForm(data=request.POST, instance=request.user)
+        form = ProfileForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid():
             form.save()
             messages.success(request, 'Profile updated !')

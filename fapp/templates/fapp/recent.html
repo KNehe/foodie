@@ -16,7 +16,7 @@
       <section class="recent_post">
         <a href="{% url 'fapp:comments' post.id %}">
             <div class="content">
-              <p class="body"  style="white-space: pre;">{{post.body}}</p>
+              <p class="body"  style="white-space: pre;">{{post.body | capfirst}}</p>
               <p class="name">
                 <small>{{post.created_at | timesince}} ago</small>
               </p>
