@@ -9,6 +9,9 @@ const deleteObject = (event, type) => {
     case 'DELETE_FOODIE':
         msg = 'Are you sure you want to delete this foodie ?'
         break;
+    case 'DELETE_COMMENT':
+        msg = 'Are you sure you want to delete this comment ?'
+        break;
     default:
         msg = 'Are you sure you want to delete ?'    
     }

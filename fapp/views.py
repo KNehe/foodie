@@ -1,4 +1,4 @@
-from django.http.response import HttpResponse
+from django.http.response import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.contrib import messages
@@ -307,3 +307,18 @@ def delete_account(request, pk):
     user.delete()
 
     return redirect(reverse('fapp:home'))
+
+@login_required(login_url='login')
+def delete_post(request, pk):
+    post = Post.objects.filter(Q(id=pk))
+    if post:
+        post.delete()
+    
+    return redirect(reverse('fapp:home'))
+
+def delete_comment(request, pk):
+    comment = Comment.objects.filter(Q(id=pk))
+    if comment:
+        comment.delete()
+    
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

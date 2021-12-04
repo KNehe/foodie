@@ -20,5 +20,7 @@ urlpatterns = [
     path('comments/post/<str:pk>', views.comment, name='comments'),
     path('profile/<str:pk>', views.show_user_profile, name='profile'),
     path('edit_profile/<str:pk>', views.edit_profile, name="edit_profile"),
-    path('delete_account/<str:pk>', views.delete_account, name="delete_account")
+    path('delete_account/<str:pk>', views.delete_account, name="delete_account"),
+    path('delete_foodie/<str:pk>', views.delete_post, name='delete_foodie'),
+    path('delete_comment/<str:pk>', views.delete_comment, name='delete_comment')
 ]

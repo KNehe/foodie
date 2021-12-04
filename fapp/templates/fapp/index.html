@@ -63,6 +63,14 @@
 
               {{post.comment_set.all.count}}
             </a>
+            {% if user == post.created_by %}
+            <a 
+              href="{% url 'fapp:delete_foodie' post.id %}" 
+              title="Delete"
+              onclick="deleteObject(event, 'DELETE_FOODIE')"
+              ><img src="{% static 'images/icons8-delete-48.png' %}"
+            /></a>
+            {% endif %}
           </div>
         </div>
       </div>
@@ -154,6 +162,7 @@
     display: flex;
     align-items: center;
     margin-top: 1.2rem;
+    margin-right: 1rem;
   }
   .content > .actions a > img {
     margin-right: 0.1rem;
@@ -162,12 +171,11 @@
     height: 20px;
   }
   .content > .actions a:hover {
-    margin-right: 0.1rem;
     border-bottom: 1px solid black;
   }
   .add_post > .avatar1 {
-    height: 3em;
-    width: 3rem;
+    height: 2.7em;
+    width: 2.9rem;
     margin-right: 0.3rem;
   }
   .add_post > .avatar1 > img {
