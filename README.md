@@ -9,6 +9,7 @@ and favorite meals. Published content is called a foodie
 - Django
 - HTML
 - CSS
+- Javascript
 
 ## Setting up
 
@@ -21,6 +22,7 @@ and favorite meals. Published content is called a foodie
 ## Features
 
 - User registration and login using an email and password
+- Send email on registration
 - Users can comment on a published foodie
 - Upvote or downvote depending on the kind of content
 - Editing one's profile
