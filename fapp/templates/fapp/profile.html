@@ -1,95 +1,94 @@
-{% extends 'main.html' %}
-
-{% block main %}
-{% load static %}
+{% extends 'main.html' %} {% block main %} {% load static %}
 <section class="container">
-
   <!-- list of popular post-->
   {% include 'fapp/popular.html' %}
   <!-- end list of popular post-->
-   
+
   <!--middle-->
   <section class="middle">
-    
     <!-- user details -->
     <section class="user_info">
-        <img src="{{user.avatar.url}}" alt="user profile picture" />
-        <section class="bio">
-            <p><span class="bold">Username:</span> {{user.username | title }}</p>
-            {% if user.first_name %}
-            <p><span class="bold">First name:</span> {{user.first_name  | title }}</p>
-            {% else %}
-            <p><span class="bold">First name:</span> unkown </p>
-            {% endif %}
-
-            {% if user.last_name %}
-            <p><span class="bold">Last name:</span> {{user.last_name  | title}}</p>
-            {% else %}
-            <p><span class="bold">Last name:</span> unkown</p>
-            {% endif %}
-            <p><span class="bold">Email:</span> {{user.email}}</p>
-        </section>
-  </section>
+      <img src="{{user.avatar.url}}" alt="user profile picture" />
+      <section class="bio">
+        <p><span class="bold">Username:</span> {{user.username | title }}</p>
+        {% if user.first_name %}
+        <p>
+          <span class="bold">First name:</span> {{user.first_name | title }}
+        </p>
+        {% else %}
+        <p><span class="bold">First name:</span> unkown</p>
+        {% endif %} {% if user.last_name %}
+        <p><span class="bold">Last name:</span> {{user.last_name | title}}</p>
+        {% else %}
+        <p><span class="bold">Last name:</span> unkown</p>
+        {% endif %}
+        <p><span class="bold">Email:</span> {{user.email}}</p>
+      </section>
+    </section>
     <!-- end user details -->
 
     <!-- Posts by user -->
     <section>
-        <h2>Foodies by {{user}}</h2>
+      <h2>Foodies by {{user}}</h2>
 
-        {% if not posts %}
-        <p>{{user | capfirst }} has not created a foodie since they joined</p>
-        {% endif %}
+      {% if not posts %}
+      <p>{{user | capfirst }} has not created a foodie since they joined</p>
+      {% endif %} {% for post in posts %}
+      <div id="{{post.id}}" class="foodies">
+        <section class="foodie_content">
+          <div id="{{post.id}}" style="white-space: pre">
+            <strong>{{post.body | capfirst}}</strong>
+          </div>
+          <small>{{post.created_at | timesince}}</small>
+          <div class="foodie_actions">
+            <a href="{% url 'fapp:upvote' post.id %}" title="Up vote">
+              <img src="{% static 'images/upvote.png' %}" alt="up vote icon" />
+              {{post.upvote_set.all.count}}
+            </a>
+            <a href="{% url 'fapp:downvote' post.id %}" title="Down vote">
+              <img
+                src="{% static 'images/icons8-thumbs-down-24.png' %}"
+                alt="down_vote_icon"
+              />
+              {{post.downvote_set.all.count}}
+            </a>
+            <a href="{% url 'fapp:comments' post.id %}" title="Comments">
+              <img
+                src="{% static 'images/icons8-comments-26.png' %}"
+                alt="down_vote_icon"
+              />
 
-        {% for post in posts %}
-        <div id="{{post.id}}" class="foodies">
-            <section class="foodie_content">
-              <div id="{{post.id}}" style="white-space: pre;">
-                <strong>{{post.body | capfirst}}</strong>
-              </div>
-              <small>{{post.created_at | timesince}}</small>
-              <div class="foodie_actions">
-                <a href="{% url 'fapp:upvote' post.id %}" title="Up vote">
-                  <img src="{% static 'images/upvote.png' %}" alt="up vote icon">
-                  {{post.upvote_set.all.count}}
-                </a>
-                <a href="{% url 'fapp:downvote' post.id %}" title="Down vote">
-                  <img src="{% static 'images/icons8-thumbs-down-24.png' %}" alt="down_vote_icon">
-                  {{post.downvote_set.all.count}}
-                </a>
-                <a href="{% url 'fapp:comments' post.id %}" title="Comments">
-      
-                  <img src="{% static 'images/icons8-comments-26.png' %}" alt="down_vote_icon">
-      
-                  {{post.comment_set.all.count}}
-                </a>
-              </div>
-            </section>
-        </div>
+              {{post.comment_set.all.count}}
+            </a>
+          </div>
+        </section>
+      </div>
 
-        {% endfor %}
+      {% endfor %}
     </section>
     <!-- End of posts by user -->
-    
+
     <!-- Security -->
     <section class="security">
-      
       {% if user == request.user %}
       <a href="{% url 'fapp:edit_profile' user.id %}"> Edit profile </a>
-      <br>
-      <a href="{% url 'fapp:delete_account' user.id %}" onclick="deleteObject(event, 'DELETE_ACCOUNT')"> Delete account </a>
+      <br />
+      <a
+        href="{% url 'fapp:delete_account' user.id %}"
+        onclick="deleteObject(event, 'DELETE_ACCOUNT')"
+      >
+        Delete account
+      </a>
       {% endif %}
     </section>
     <!-- end of security -->
-
   </section>
-  <!--end of middle --> 
+  <!--end of middle -->
 
-   <!-- Your recent foodies-->
-   {% include 'fapp/recent.html' %}
-   <!-- Your recent foodies-->
-  
+  <!-- Your recent foodies-->
+  {% include 'fapp/recent.html' %}
+  <!-- Your recent foodies-->
 </section>
-
 
 <style>
   .container {
@@ -122,12 +121,12 @@
     padding: 1rem;
   }
   .foodies {
-    border: 1px solid grey; 
+    border: 1px solid grey;
     margin-bottom: 1rem;
     padding: 1rem;
     border-radius: 8px;
   }
-  .foodie_content > .foodie_actions{
+  .foodie_content > .foodie_actions {
     margin-top: 1rem;
     display: flex;
     justify-content: space-between;
@@ -139,7 +138,7 @@
   }
   .security > a {
     border: 1px solid grey;
-    padding: .5rem;
+    padding: 0.5rem;
     border-radius: 8px;
   }
   .security > a:last-of-type {
@@ -147,38 +146,39 @@
   }
   @media screen and (max-width: 1016px) {
     .container {
-    grid-template-columns: 1fr 3fr;
-    column-gap: .5rem;
-    width: 95%;
+      grid-template-columns: 1fr 3fr;
+      column-gap: 0.5rem;
+      width: 95%;
+    }
+    .recent_main {
+      display: none;
+    }
+    .bold {
+      font-weight: 700;
+    }
   }
-  .recent_main {
-    display: none;
+  @media screen and (max-width: 682px) {
+    .container {
+      grid-template-columns: 1fr;
+      width: 100%;
+      margin: 0 0.5rem;
+    }
+    .popular_main,
+    .recent_main {
+      display: none;
+    }
+    .middle_col {
+      width: 85%;
+    }
+    .add_post {
+      width: 85%;
+      align-self: center;
+    }
+    .foodies,
+    .security {
+      width: 95%;
+    }
   }
-  .bold {
-    font-weight: 700;
-  }
-}
-@media screen and (max-width: 682px) {
-  .container {
-    grid-template-columns: 1fr;
-    width: 100%;
-    margin: 0 .5rem;
-  }
-  .popular_main , .recent_main{
-    display: none;
-  }
-  .middle_col {
-    width: 85%;
-  }
-  .add_post {
-    width: 85%;
-    align-self: center;
-  }
-  .foodies , .security{
-    width: 95%;
-  }
-  
-}
 </style>
 
 {% endblock main %}
