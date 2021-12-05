@@ -1,0 +1,227 @@
+{% extends 'main.html' %} {% load static %} {% block main %}
+
+<section class="container">
+  <!-- list of popular post-->
+  {% include 'fapp/popular.html' %}
+  <!-- end list of popular post-->
+
+  <!--comment section-->
+  <section class="comment_section">
+    {% for post in post %}
+    <div class="group">
+      <div class="top">
+        <div class="user_pic">
+          <img src="{{post.created_by.avatar.url}}" alt="" />
+        </div>
+        <div>
+          <strong class="username">
+            <a href="{% url 'fapp:profile' post.created_by.id %}">
+              @{{post.created_by}}
+            </a>
+          </strong>
+          <small>{{post.created_at | timesince}} ago</small>
+        </div>
+      </div>
+
+      <section class="content">
+        <div id="{{post.id}}" style="white-space: pre">
+          {{post.body | capfirst}}
+        </div>
+
+        <div class="actions">
+          <a href="{% url 'fapp:upvote' post.id %}" title="Up vote">
+            <img src="{% static 'images/upvote.png' %}" alt="up vote icon" />
+            {{post.upvote_set.all.count}}
+          </a>
+          <a href="{% url 'fapp:downvote' post.id %}" title="Down vote">
+            <img
+              src="{% static 'images/icons8-thumbs-down-24.png' %}"
+              alt="down_vote_icon"
+            />
+            {{post.downvote_set.all.count}}
+          </a>
+          <a href="{% url 'fapp:comments' post.id %}" title="Comments">
+            <img
+              src="{% static 'images/icons8-comments-26.png' %}"
+              alt="down_vote_icon"
+            />
+
+            {{post.comment_set.all.count}}
+          </a>
+        </div>
+      </section>
+    </div>
+
+    {% endfor %}
+
+    <h2>Comments</h2>
+
+    <form method="POST" class="comment_form">
+      {% csrf_token %} {{form}}
+      <input type="submit" value="Add" />
+    </form>
+
+    {% if not comments %}
+    <p style="text-align: center; font-style: italic">
+      Be the first to comment
+    </p>
+    {% endif %} {% for comment in comments %}
+    <section class="single_comment">
+      <div class="top">
+        <div class="user_pic">
+          <img src="{{comment.created_by.avatar.url}}" alt="" />
+        </div>
+
+        <div>
+          <strong class="username">
+            <a href="{% url 'fapp:profile' comment.created_by.id %}">
+              @{{comment.created_by}}
+            </a>
+          </strong>
+
+          <small> {{comment.created_at | timesince}} ago</small>
+
+          <p class="comment_body" style="white-space: pre">{{comment.body}}</p>
+
+          {% if user == comment.created_by %}
+          <a 
+            href="{% url 'fapp:delete_comment' comment.id %}" 
+            title="Delete" 
+            class="delete-comment"
+            onclick="deleteObject(event, 'DELETE_COMMENT')"
+            ><img src="{% static 'images/icons8-delete-48.png' %}"
+          /></a>
+          {% endif %}
+        </div>
+      </div>
+    </section>
+
+    {% endfor %}
+  </section>
+  <!--comment section-->
+
+  <!-- Your recent foodies-->
+  {% include 'fapp/recent.html' %}
+  <!-- Your recent foodies-->
+</section>
+
+<style>
+  .container {
+    display: grid;
+    grid-template-columns: 1fr 3fr 1fr;
+    column-gap: 1rem;
+    width: 80%;
+    margin: 0 auto;
+  }
+
+  .comment_section {
+    width: 100%;
+    max-width: 600px;
+    padding: 1rem;
+    margin: 0 auto;
+  }
+
+  .group {
+    border: 1px solid rgb(209, 200, 200);
+    padding: 1rem;
+    padding-bottom: 0;
+    border-radius: 8px;
+  }
+
+  .top {
+    display: flex;
+  }
+
+  .user_pic {
+    height: 2.5rem;
+    width: 2.5rem;
+    border-radius: 100%;
+    margin-right: 0.2rem;
+  }
+  .user_pic > img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border: 1px solid hsl(0, 0%, 60%);
+    border-radius: 50%;
+  }
+
+  .comment_section .content {
+    margin: 1rem 0;
+  }
+
+  .comment_section .content > .actions {
+    margin-top: 1rem;
+  }
+
+  .single_comment {
+    margin-top: 1rem;
+    border: 1px solid rgb(209, 200, 200);
+    padding: 1rem;
+    border-radius: 8px;
+  }
+  .comment_form {
+    display: flex;
+    flex-direction: column;
+  }
+  .comment_form > input {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-self: flex-end;
+    margin-top: 0.5rem;
+    width: 20%;
+    border-radius: 2px;
+    background-color: #fe724c;
+    color: #fff;
+    outline: none;
+    border: 0;
+    transition: all 0.5s ease-in;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+  }
+  .comment_form > input:hover {
+    background-color: hsl(13, 99%, 50%);
+    cursor: pointer;
+  }
+  .top .username:hover {
+    text-decoration: underline;
+  }
+  .comment_body {
+    margin-top: 0.5rem;
+  }
+  .delete-comment > img {
+    width: 1rem;
+    height: 1rem;
+    margin-top: .5rem;
+  }
+  @media screen and (max-width: 1016px) {
+    .container {
+      grid-template-columns: 1fr 3fr;
+      column-gap: 0.5rem;
+      width: 95%;
+    }
+    .recent_main {
+      display: none;
+    }
+  }
+  @media screen and (max-width: 682px) {
+    .container {
+      grid-template-columns: 1fr;
+      width: 100%;
+      margin: 0 0.5rem;
+    }
+    .popular_main,
+    .recent_main {
+      display: none;
+    }
+    .middle_col {
+      width: 85%;
+    }
+    .add_post {
+      width: 85%;
+    }
+  }
+</style>
+
+{% endblock main %}

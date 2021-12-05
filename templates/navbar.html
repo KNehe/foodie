@@ -1,0 +1,122 @@
+<style>
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid hsl(0, 3%, 80%);
+    padding: 0.5rem 1rem;
+    width: 100%;
+  }
+
+  .search {
+    border-radius: 5px;
+    padding: 0.5rem;
+    border: 1px solid grey;
+    text-align: center;
+    width: 100%;
+  }
+
+  .search:focus {
+    /* border:  1px solid hsl(0, 0%, 40%); */
+    outline: hsl(0, 0%, 50%) solid 1px;
+  }
+
+  .avatar {
+    height: 2rem;
+    width: 2rem;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    margin-right: 0.5rem;
+  }
+
+  .avatar > img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border: 1px solid hsl(0, 0%, 60%);
+    border-radius: 50%;
+  }
+
+  .dropdown,
+  p {
+    margin: 0;
+    padding: 0;
+    position: relative;
+  }
+
+  .dropdown_visible {
+    display: flex;
+    align-items: center;
+  }
+
+  .dropdown_toggle {
+    position: absolute;
+    border: 1px solid hsl(0, 19%, 88%);
+    border-radius: 8px;
+    padding: 1rem 0;
+    margin-top: 0.1rem;
+    width: 85px;
+    background-color: hsl(0, 19%, 99%);
+    display: none;
+  }
+
+  .dropdown_toggle > a {
+    display: block;
+    text-align: center;
+    padding: 0.2rem 0;
+    margin-bottom: 0.2rem;
+  }
+
+  .dropdown_toggle > a:hover {
+    background-color: hsl(0, 19%, 88%);
+  }
+
+  .dropdown:active > .dropdown_toggle,
+  .dropdown:hover > .dropdown_toggle {
+    display: block;
+  }
+
+  @media screen and (max-width: 400px) {
+    .search_input {
+      display: none;
+    }
+  }
+</style>
+
+<nav class="navbar">
+  <!--Logo-->
+  <a href="{% url 'fapp:home' %}" class="logo">
+    <div class="logo_text_1">F</div>
+    <p class="logo_text_2">Foodie</p>
+  </a>
+
+  <!--Search field-->
+  <form action="{% url 'fapp:home' %}" method="get" class="search_input">
+    <input placeholder="Find a foodie" name="search" class="search" />
+  </form>
+
+  <!--Signin, sign out-->
+  <ul class="links">
+    {% if not user.is_authenticated %}
+    <li><a href="{% url 'fapp:login' %}">Login</a></li>
+    <li><a href="{% url 'fapp:register' %}">Register</a></li>
+    {% else %}
+
+    <li class="dropdown">
+      <div class="dropdown_visible">
+        <div class="avatar">
+          <img src="{{user.avatar.url}}" alt="" />
+        </div>
+        <p>{{user.username | capfirst }}</p>
+      </div>
+      <div class="dropdown_toggle">
+        <a href="{% url 'fapp:home' %}">Home</a>
+        <a href="{% url 'fapp:profile' user.id %}">Profile</a>
+        <a href="{% url 'fapp:logout' %}">Logout</a>
+      </div>
+    </li>
+
+    {% endif %}
+  </ul>
+</nav>

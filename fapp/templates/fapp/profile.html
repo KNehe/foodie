@@ -1,0 +1,184 @@
+{% extends 'main.html' %} {% block main %} {% load static %}
+<section class="container">
+  <!-- list of popular post-->
+  {% include 'fapp/popular.html' %}
+  <!-- end list of popular post-->
+
+  <!--middle-->
+  <section class="middle">
+    <!-- user details -->
+    <section class="user_info">
+      <img src="{{user.avatar.url}}" alt="user profile picture" />
+      <section class="bio">
+        <p><span class="bold">Username:</span> {{user.username | title }}</p>
+        {% if user.first_name %}
+        <p>
+          <span class="bold">First name:</span> {{user.first_name | title }}
+        </p>
+        {% else %}
+        <p><span class="bold">First name:</span> unkown</p>
+        {% endif %} {% if user.last_name %}
+        <p><span class="bold">Last name:</span> {{user.last_name | title}}</p>
+        {% else %}
+        <p><span class="bold">Last name:</span> unkown</p>
+        {% endif %}
+        <p><span class="bold">Email:</span> {{user.email}}</p>
+      </section>
+    </section>
+    <!-- end user details -->
+
+    <!-- Posts by user -->
+    <section>
+      <h2>Foodies by {{user}}</h2>
+
+      {% if not posts %}
+      <p>{{user | capfirst }} has not created a foodie since they joined</p>
+      {% endif %} {% for post in posts %}
+      <div id="{{post.id}}" class="foodies">
+        <section class="foodie_content">
+          <div id="{{post.id}}" style="white-space: pre">
+            <strong>{{post.body | capfirst}}</strong>
+          </div>
+          <small>{{post.created_at | timesince}}</small>
+          <div class="foodie_actions">
+            <a href="{% url 'fapp:upvote' post.id %}" title="Up vote">
+              <img src="{% static 'images/upvote.png' %}" alt="up vote icon" />
+              {{post.upvote_set.all.count}}
+            </a>
+            <a href="{% url 'fapp:downvote' post.id %}" title="Down vote">
+              <img
+                src="{% static 'images/icons8-thumbs-down-24.png' %}"
+                alt="down_vote_icon"
+              />
+              {{post.downvote_set.all.count}}
+            </a>
+            <a href="{% url 'fapp:comments' post.id %}" title="Comments">
+              <img
+                src="{% static 'images/icons8-comments-26.png' %}"
+                alt="down_vote_icon"
+              />
+
+              {{post.comment_set.all.count}}
+            </a>
+          </div>
+        </section>
+      </div>
+
+      {% endfor %}
+    </section>
+    <!-- End of posts by user -->
+
+    <!-- Security -->
+    <section class="security">
+      {% if user == request.user %}
+      <a href="{% url 'fapp:edit_profile' user.id %}"> Edit profile </a>
+      <br />
+      <a
+        href="{% url 'fapp:delete_account' user.id %}"
+        onclick="deleteObject(event, 'DELETE_ACCOUNT')"
+      >
+        Delete account
+      </a>
+      {% endif %}
+    </section>
+    <!-- end of security -->
+  </section>
+  <!--end of middle -->
+
+  <!-- Your recent foodies-->
+  {% include 'fapp/recent.html' %}
+  <!-- Your recent foodies-->
+</section>
+
+<style>
+  .container {
+    display: grid;
+    grid-template-columns: 1fr 3fr 1fr;
+    column-gap: 1rem;
+    width: 80%;
+    margin: 0 auto;
+  }
+  .middle {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  .user_info {
+    display: flex;
+    flex-direction: column;
+    border-radius: 8px;
+    padding-top: 1rem;
+  }
+  .user_info > img {
+    height: 6rem;
+    width: 6rem;
+    align-self: center;
+    justify-self: center;
+    border-radius: 50%;
+    border: 1px solid hsl(0, 0%, 60%);
+  }
+  .user_info > .bio {
+    padding: 1rem;
+  }
+  .foodies {
+    border: 1px solid grey;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    border-radius: 8px;
+  }
+  .foodie_content > .foodie_actions {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: space-between;
+  }
+  .security {
+    display: flex;
+    margin-bottom: 1rem;
+    justify-content: space-between;
+  }
+  .security > a {
+    border: 1px solid grey;
+    padding: 0.5rem;
+    border-radius: 8px;
+  }
+  .security > a:last-of-type {
+    border: 1px solid red;
+  }
+  @media screen and (max-width: 1016px) {
+    .container {
+      grid-template-columns: 1fr 3fr;
+      column-gap: 0.5rem;
+      width: 95%;
+    }
+    .recent_main {
+      display: none;
+    }
+    .bold {
+      font-weight: 700;
+    }
+  }
+  @media screen and (max-width: 682px) {
+    .container {
+      grid-template-columns: 1fr;
+      width: 100%;
+      margin: 0 0.5rem;
+    }
+    .popular_main,
+    .recent_main {
+      display: none;
+    }
+    .middle_col {
+      width: 85%;
+    }
+    .add_post {
+      width: 85%;
+      align-self: center;
+    }
+    .foodies,
+    .security {
+      width: 95%;
+    }
+  }
+</style>
+
+{% endblock main %}

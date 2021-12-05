@@ -1,0 +1,94 @@
+{% extends 'main.html' %} {% block main %}
+
+<section class="auth_form_main">
+  <div class="title">
+    <h1>Foodie Registration</h1>
+  </div>
+
+  <form method="POST" class="form">
+    {% csrf_token %} {{form}}
+    <button type="submit">Register</button>
+  </form>
+  <p>
+    If you already have an account, <a href="{% url 'fapp:login' %}">Login</a>
+  </p>
+</section>
+
+<style>
+  .auth_form_main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 auto;
+    max-width: 500px;
+    border: 1px solid rgb(180, 176, 176);
+    border-radius: 8px;
+    margin-bottom: 2rem;
+  }
+
+  .title {
+    border-bottom: 1px solid rgb(180, 176, 176);
+    width: 100%;
+    text-align: center;
+  }
+  .auth_form_main > .form {
+    display: flex;
+    flex-direction: column;
+    margin-top: 1rem;
+    width: 70%;
+  }
+  .auth_form_main > .form > input {
+    padding: 0.5rem;
+    border-radius: 5px;
+    border-width: 1px;
+  }
+  .auth_form_main > .form > input:nth-of-type(3) {
+    margin-bottom: 1rem;
+  }
+  .auth_form_main > .form > input:nth-of-type(4) {
+    margin-bottom: -1rem;
+  }
+  .auth_form_main > .form > input:nth-of-type(5) {
+    margin-bottom: -.5rem;
+  }
+  .auth_form_main > .form > button {
+    background-color: #fe724c;
+    padding: 0.5rem;
+    border: 0;
+    color: white;
+    font-weight: 700;
+    border-radius: 8px;
+    margin-top: 10px;
+  }
+  .auth_form_main > .form > button:hover {
+    background-color: #f56138;
+    cursor: pointer;
+  }
+  .auth_form_main > p > a {
+    text-decoration: underline;
+  }
+  .auth_form_main > p {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+  .helptext > ul {
+    margin-bottom: 0.6rem;
+    padding: 0;
+  }
+  .helptext:first-of-type {
+    margin-bottom: 0.6rem;
+  }
+  .helptext:last-of-type {
+    margin-bottom: 0.6rem;
+  }
+  label {
+    font-weight: 700;
+  }
+  @media screen and (max-width: 400px) {
+    .auth_form_main {
+      margin: 0 0.5rem;
+    }
+  }
+</style>
+
+{% endblock main %}

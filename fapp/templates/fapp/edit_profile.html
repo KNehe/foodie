@@ -1,0 +1,94 @@
+{% extends 'main.html' %} {% block main %}
+
+<section class="auth_form_main">
+  <div class="title">
+    <h1>Foodie Edit Profile</h1>
+  </div>
+
+  <form method="post" class="form" enctype="multipart/form-data">
+    {% csrf_token %} {{form}}
+
+    <div class="buttons">
+      <a href="{% url 'fapp:profile' request.user.id %}">Cancel</a>
+      <button type="submit">Save changes</button>
+    </div>
+  </form>
+</section>
+
+<style>
+  .auth_form_main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 auto;
+    max-width: 500px;
+    border: 1px solid rgb(180, 176, 176);
+    border-radius: 8px;
+  }
+  .title {
+    border-bottom: 1px solid rgb(180, 176, 176);
+    width: 100%;
+    text-align: center;
+  }
+  .auth_form_main > .form {
+    display: flex;
+    flex-direction: column;
+    margin-top: 1rem;
+    width: 70%;
+  }
+  .auth_form_main > .form > input {
+    margin-bottom: 1rem;
+    width: 100%;
+    padding: 0.5rem;
+    border-radius: 5px;
+    border-width: 1px;
+  }
+  .auth_form_main > .form > input[type="file"] {
+    margin-bottom: 1rem;
+    margin-top: 0.2rem;
+    border: 1px solid black;
+  }
+  .auth_form_main > .form > label:first-of-type {
+    margin-bottom: 1rem;
+  }
+  .auth_form_main > .form > label:first-of-type + a {
+    margin-bottom: -1rem;
+    text-decoration: underline;
+  }
+  .auth_form_main > .form > .buttons {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .auth_form_main > .form > .buttons > a {
+    border: 1px solid #a3381b;
+    padding: 0.5rem;
+    font-weight: 700;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+  }
+  .auth_form_main > .form > .buttons > button {
+    background-color: #fe724c;
+    padding: 0.5rem;
+    border: 0;
+    color: white;
+    font-weight: 700;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+  }
+  .auth_form_main > .form > .buttons > button:hover {
+    background-color: #f56138;
+    cursor: pointer;
+  }
+  label {
+    font-weight: 700;
+  }
+  @media screen and (max-width: 400px) {
+    .auth_form_main {
+      margin: 0 0.5rem;
+    }
+  }
+</style>
+
+{% endblock main %}

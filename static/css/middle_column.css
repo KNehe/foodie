@@ -1,0 +1,31 @@
+/* add post area */
+.add_post {
+    display: flex;
+  }
+ 
+  .add_post > form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+  .add_post > form > .input{
+    border-radius: 5px;
+    padding-top: 1.2rem;
+  }
+  .add_post > form > input{
+    align-self: flex-end;
+    margin-top: .5rem;
+    background-color: #FE724C;
+    padding: .5rem 1rem;
+    border-radius: 8px;
+    color: #fff;
+    outline: none;
+    border:0;
+    transition: all .5s ease-in;
+  }
+  .add_post > form > input:hover{
+    background-color: hsl(13, 99%, 50%);
+    cursor: pointer;
+  }
+
+  /* end of add post area */

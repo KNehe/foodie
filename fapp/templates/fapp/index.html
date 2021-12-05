@@ -1,30 +1,236 @@
-{% extends 'main.html' %} {% block main %} 
+{% extends 'main.html' %} {% block main %} {% load static %}
 
-<form method="post" action="{% url 'fapp:addpost' %}">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <input type="submit" value="Submit" />
-</form>
-<!--list of posts-->
-{% if not posts %}
-<p>No posts available</p>
-{% endif %}
-{% for post in posts %}
+<!--container-->
+<section class="container">
+  <!-- list of popular post-->
+  {% include 'fapp/popular.html' %}
+  <!-- end list of popular post-->
+
+  <!--list of posts and form -->
+  <section class="middle_col">
+    <!--profile pic, form-->
+    <section class="add_post">
+      <div class="avatar1">
+        {% if user.is_authenticated %}
+        <img src="{{user.avatar.url}}" alt="" />
+        {% else %}
+        <img src="{% static '/images/avatar.svg' %}" alt="" />
+        {% endif %}
+      </div>
+      <form method="post" action="{% url 'fapp:addpost' %}">
+        {% csrf_token %} {{ form}}
+        <input type="submit" value="Publish" />
+      </form>
+    </section>
+    <!-- end of profile pic, form-->
+
+    <!--list of posts -->
+    <section class="list">
+      {% if not posts %}
+      <p>No posts available</p>
+      {% endif %} {% for post in posts %}
+      <div class="post" id="{{post.id}}">
+        <div class="profile_pic">
+          <img src="{{post.created_by.avatar.url}}" alt="" />
+        </div>
+        <div class="content">
+          <p class="name">
+            <strong>
+              <a href="{% url 'fapp:profile' post.created_by.id %}"
+                >@{{post.created_by}}</a
+              >
+            </strong>
+            <small>{{post.created_at | timesince}} ago</small>
+          </p>
+          <p class="body">{{post.body | capfirst }}</p>
+          <div class="actions">
+            <a href="{% url 'fapp:upvote' post.id %}" title="Up vote">
+              <img src="{% static 'images/upvote.png' %}" alt="up vote icon" />
+              {{post.upvote_set.all.count}}
+            </a>
+            <a href="{% url 'fapp:downvote' post.id %}" title="Down vote">
+              <img
+                src="{% static 'images/icons8-thumbs-down-24.png' %}"
+                alt="down vote icon"
+              />
+              {{post.downvote_set.all.count}}
+            </a>
+            <a href="{% url 'fapp:comments' post.id %}" title="Comments">
+              <img
+                src="{% static 'images/icons8-comments-26.png' %}"
+                alt="comment icon"
+              />
+
+              {{post.comment_set.all.count}}
+            </a>
+            {% if user == post.created_by %}
+            <a 
+              href="{% url 'fapp:delete_foodie' post.id %}" 
+              title="Delete"
+              onclick="deleteObject(event, 'DELETE_FOODIE')"
+              ><img src="{% static 'images/icons8-delete-48.png' %}"
+            /></a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </section>
+    <!--end of list of posts -->
+  </section>
+  <!-- end list of  posts-->
+
+  <!-- Your recent foodies-->
+  {% include 'fapp/recent.html' %}
+  <!-- Your recent foodies-->
+</section>
+<!-- end of container-->
+
 <style>
-    div{
-        white-space: pre-line;
+  .container {
+    display: grid;
+    grid-template-columns: 1fr 3fr 1fr;
+    column-gap: 1rem;
+    width: 80%;
+    margin: 0 auto;
+  }
+  /* list of posts */
+  .middle_col {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  .list {
+    margin-top: 1rem;
+    align-self: flex-start;
+    width: 100%;
+  }
+  .post {
+    display: flex;
+    padding: 1rem 0.4em;
+    width: 100%;
+    border-radius: 8px;
+    color: rgb(6, 7, 68);
+    margin-bottom: 1rem;
+    color: (66, 49, 49);
+    transition: all 0.2s ease-in;
+    border: 1px solid rgb(209, 200, 200);
+    padding: 1rem;
+    border-radius: 8px;
+    cursor: default !important;
+  }
+  .post:hover {
+    border: 1px solid rgb(122, 117, 117);
+    cursor: pointer;
+  }
+  .post > .profile_pic {
+    height: 2rem;
+    width: 2rem;
+    border-radius: 100%;
+    margin-right: 0.3em;
+  }
+  .post > .profile_pic > img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border: 1px solid hsl(0, 0%, 60%);
+    border-radius: 100%;
+  }
+  .content > .name {
+    margin-bottom: 0.4em;
+  }
+  .content > .name > strong {
+    font-size: 1.1rem;
+  }
+  .content > .name > strong:hover {
+    text-decoration: underline;
+  }
+  .content > .body {
+    font-size: 1.1rem;
+    white-space: pre;
+  }
+  .content p {
+    margin: 0;
+  }
+  .content > .actions {
+    display: flex;
+    justify-content: space-between;
+  }
+  .content > .actions a {
+    display: flex;
+    align-items: center;
+    margin-top: 1.2rem;
+    margin-right: 1rem;
+  }
+  .content > .actions a > img {
+    margin-right: 0.1rem;
+    transition: background-color 0.5s ease-in;
+    width: 20px;
+    height: 20px;
+  }
+  .content > .actions a:hover {
+    border-bottom: 1px solid black;
+  }
+  .add_post > .avatar1 {
+    height: 2.7em;
+    width: 2.9rem;
+    margin-right: 0.3rem;
+  }
+  .add_post > .avatar1 > img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border: 1px solid hsl(0, 0%, 60%);
+    border-radius: 50%;
+  }
+  @media screen and (max-width: 1016px) {
+    .container {
+      grid-template-columns: 1fr 3fr;
+      column-gap: 0.5rem;
+      width: 95%;
     }
+    .recent_main {
+      display: none;
+    }
+  }
+  @media screen and (max-width: 682px) {
+    .container {
+      grid-template-columns: 1fr;
+      width: 100%;
+      margin: 0 0.5rem;
+    }
+    .popular_main,
+    .recent_main {
+      display: none;
+    }
+    .middle_col {
+      width: 85%;
+    }
+    .add_post {
+      width: 70%;
+      align-self: center;
+      flex-direction: column;
+    }
+    .add_post > .avatar1 {
+      margin-bottom: 1rem;
+      width: 2.5em;
+      height: 2.5rem;
+    }
+    .add_post > form {
+      width: 100%;
+    }
+  }
+
+  @media screen and (max-width: 400px) {
+    .middle_col {
+      width: 80%;
+    }
+    .add_post {
+      width: 70%;
+      align-self: center;
+    }
+  }
 </style>
-<!-- use sections, articles, aside, h1, etc-->
-<div style="border: 1px solid black; margin-bottom:2px;">
-  <div>{{post.body}}</div>
-  <div>
-    <p>Upvote: {{post.up_vote}}</p>
-    <p>Downvote: {{post.down_vote}}</p>
-    <p>{{post.created_at | timesince}} ago</p>
-    <p>{{post.created_by}}</p>
-    <p>{{post.comment_set.all.count}} comments</p>
-  </div>
-</div>
-{% endfor %} 
 {% endblock %}

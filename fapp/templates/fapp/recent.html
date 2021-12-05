@@ -1,0 +1,122 @@
+{% load static %}
+
+<!-- Your recent foodies-->
+<section class="recent_main">
+  <h2>Your Recent Foodies</h2>
+
+  {% if not request.user.is_authenticated %}
+  <p>
+    <a href="{% url 'fapp:login' %}" style="text-decoration: underline"
+      >Sign in to see recent foodies</a
+    >
+  </p>
+  {% elif not recent %}
+  <p>You haven't posted a foodie yet</p>
+  {% else %}
+
+  <section class="wrapper">
+    {% for post in recent %}
+    <section class="recent_post">
+      <a href="{% url 'fapp:comments' post.id %}">
+        <div class="content">
+          <p class="body" style="white-space: pre">{{post.body | capfirst}}</p>
+          <p class="name">
+            <small>{{post.created_at | timesince}} ago</small>
+          </p>
+          <div class="actions">
+            <p>
+              <img src="{% static 'images/upvote.png' %}" alt="up vote icon" />
+              {{post.upvote_set.all.count}}
+            </p>
+            <p>
+              <img
+                src="{% static 'images/icons8-thumbs-down-24.png' %}"
+                alt="down_vote_icon"
+              />
+              {{post.downvote_set.all.count}}
+            </p>
+            <p>
+              <img
+                src="{% static 'images/icons8-comments-26.png' %}"
+                alt="down_vote_icon"
+              />
+              {{post.comment_set.all.count}}
+            </p>
+          </div>
+        </div>
+      </a>
+    </section>
+    {% endfor %}
+  </section>
+
+  {% endif %}
+</section>
+<!-- Your recent foodies-->
+
+<style>
+  .wrapper {
+    border-radius: 8px;
+    padding: 0.2rem;
+  }
+  .recent_post {
+    display: flex;
+    padding: 0.2rem;
+    width: 100%;
+    color: rgb(6, 7, 68);
+    transition: all 0.2s ease-in;
+    border-bottom: 1px solid hsl(0, 7%, 70%);
+  }
+  .recent_post > a {
+    display: block;
+    width: 100%;
+    padding: 0.8rem;
+  }
+  .recent_post:hover {
+    background-color: hsl(0, 7%, 96%);
+    cursor: pointer;
+  }
+  .recent_post:last-of-type {
+    border-bottom: 0;
+  }
+  .recent_post .profile_pic {
+    background-color: black;
+    height: 0.8rem;
+    width: 0.8rem;
+    border-radius: 100%;
+    padding: 0.8rem;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 0.3em;
+  }
+  .content > .name {
+    margin-bottom: 0.4em;
+  }
+  .content > .name > strong {
+    font-size: 1.1rem;
+  }
+  .content > .name > strong:hover {
+    text-decoration: underline;
+  }
+
+  .content p {
+    margin: 0;
+  }
+  .content > .actions {
+    display: flex;
+    margin-top: 0.6em;
+    justify-content: space-between;
+  }
+  .content > .actions p {
+    display: flex;
+    align-items: center;
+    margin-top: 1.2rem;
+  }
+  .content > .actions p > img {
+    margin-right: 0.1rem;
+    transition: background-color 0.5s ease-in;
+    width: 20px;
+    height: 20px;
+  }
+</style>

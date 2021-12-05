@@ -1,0 +1,76 @@
+{% extends 'main.html' %} {% block main %}
+
+<section class="auth_form_main">
+  <div class="title">
+    <h1>Foodie Login</h1>
+  </div>
+
+  <form method="post" class="form">
+    {% csrf_token %} {{form}}
+    <button type="submit">Login</button>
+  </form>
+
+  <p><a href="{% url 'fapp:password_reset' %}">Forgot password?</a></p>
+  <p>Have no account? <a href="{% url 'fapp:register' %}">Register</a></p>
+</section>
+
+<style>
+  .auth_form_main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 auto;
+    max-width: 500px;
+    border: 1px solid rgb(180, 176, 176);
+    border-radius: 8px;
+  }
+  .title {
+    border-bottom: 1px solid rgb(180, 176, 176);
+    width: 100%;
+    text-align: center;
+  }
+  .auth_form_main > .form {
+    display: flex;
+    flex-direction: column;
+    margin-top: 1rem;
+    width: 70%;
+  }
+  .auth_form_main > .form > input {
+    margin-bottom: 1rem;
+    width: 100%;
+    padding: 0.5rem;
+    border-radius: 5px;
+    border-width: 1px;
+  }
+  .auth_form_main > .form > button {
+    background-color: #fe724c;
+    padding: 0.5rem;
+    border: 0;
+    color: white;
+    font-weight: 700;
+    border-radius: 8px;
+  }
+  .auth_form_main > .form > button:hover {
+    background-color: #f56138;
+    cursor: pointer;
+  }
+  .auth_form_main > p > a {
+    text-decoration: underline;
+  }
+  .auth_form_main > p {
+    margin-top: 1rem;
+  }
+  .auth_form_main > p:last-of-type {
+    margin-bottom: 1rem;
+  }
+  label {
+    font-weight: 700;
+  }
+  @media screen and (max-width: 400px) {
+    .auth_form_main {
+      margin: 0 0.5rem;
+    }
+  }
+</style>
+
+{% endblock main %}
