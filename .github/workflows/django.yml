@@ -10,6 +10,13 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    env:
+      SECRET_KEY: reallyfakesecretpalls
+      SENDGRID_API_KEY: fakerandomapikey
+      EMAIL_HOST: smtp.sendgrid.net
+      EMAIL_USE_TLS: True
+      EMAIL_PORT: 587
+      FROM_EMAIL: kamolunehemiah@gmail.com
     strategy:
       max-parallel: 4
       matrix:
