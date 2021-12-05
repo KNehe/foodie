@@ -1,3 +1,5 @@
+[![Foodie Django CI](https://github.com/KNehe/foodie/actions/workflows/django.yml/badge.svg)](https://github.com/KNehe/foodie/actions/workflows/django.yml)
+
 ## FOODIE
 
 - A web application where users can publish recipes
