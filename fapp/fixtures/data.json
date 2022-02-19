@@ -1,0 +1,123 @@
+[
+{
+    "model": "fapp.user",
+    "pk": 1,
+    "fields": {
+        "password": "pbkdf2_sha256$260000$jPQUuuhHuyPxdKizJGK5kN$94NAs6TFUmj+I0qsm7NQgrjmMgIiVQmaMFfl49ke1Ko=",
+        "last_login": "2021-12-04T14:56:21.877Z",
+        "is_superuser": true,
+        "username": "nehe",
+        "first_name": "",
+        "last_name": "",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2021-11-23T07:34:18.208Z",
+        "email": "nehe@gmail.com",
+        "avatar": "pic.jpeg",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "fapp.user",
+    "pk": 2,
+    "fields": {
+        "password": "pbkdf2_sha256$260000$cvytXW5S3ia4UXYZQORMF2$4RFpvitHt4N+gNWHdTXmv9IYs8CTOr13YzzSmvO9kjE=",
+        "last_login": "2021-12-04T13:56:30.636Z",
+        "is_superuser": false,
+        "username": "Doe",
+        "first_name": "",
+        "last_name": "",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2021-12-04T13:48:40.433Z",
+        "email": "johndoe@gmail.com",
+        "avatar": "avatar.svg",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "fapp.post",
+    "pk": 5,
+    "fields": {
+        "body": "Fish\r\n- SautΘ or pan fry\r\n- Pan broil\r\n- Deep fry",
+        "created_at": "2021-12-04T13:43:26.915Z",
+        "created_by": 1
+    }
+},
+{
+    "model": "fapp.post",
+    "pk": 6,
+    "fields": {
+        "body": "Pre-cook seasoning\r\n- Dried herbs and veggies\r\n- Salt\r\n- Oil",
+        "created_at": "2021-12-04T13:50:58.561Z",
+        "created_by": 2
+    }
+},
+{
+    "model": "fapp.post",
+    "pk": 7,
+    "fields": {
+        "body": "Cook snake\r\n- Don't over cook\r\n- Good in stews",
+        "created_at": "2021-12-04T13:53:32.023Z",
+        "created_by": 1
+    }
+},
+{
+    "model": "fapp.comment",
+    "pk": 3,
+    "fields": {
+        "body": "Hahaha snake!!! won't risk",
+        "post": 7,
+        "created_at": "2021-12-04T13:55:24.632Z",
+        "created_by": 2
+    }
+},
+{
+    "model": "fapp.comment",
+    "pk": 4,
+    "fields": {
+        "body": "I use it to boost immunity",
+        "post": 7,
+        "created_at": "2021-12-04T13:55:59.963Z",
+        "created_by": 1
+    }
+},
+{
+    "model": "fapp.upvote",
+    "pk": 37,
+    "fields": {
+        "voted_by": 1,
+        "post": 6,
+        "voted_at": "2021-12-04T13:53:49.145Z"
+    }
+},
+{
+    "model": "fapp.upvote",
+    "pk": 38,
+    "fields": {
+        "voted_by": 1,
+        "post": 7,
+        "voted_at": "2021-12-04T13:53:57.702Z"
+    }
+},
+{
+    "model": "fapp.upvote",
+    "pk": 40,
+    "fields": {
+        "voted_by": 2,
+        "post": 7,
+        "voted_at": "2021-12-04T13:54:37.585Z"
+    }
+},
+{
+    "model": "fapp.downvote",
+    "pk": 10,
+    "fields": {
+        "down_voted_by": 2,
+        "post": 5,
+        "down_voted_at": "2021-12-04T13:54:48.271Z"
+    }
+}
+]
