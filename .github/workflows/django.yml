@@ -16,11 +16,26 @@ jobs:
       EMAIL_HOST: smtp.sendgrid.net
       EMAIL_USE_TLS: True
       EMAIL_PORT: 587
-      FROM_EMAIL: kamolunehemiah@gmail.com
+      FROM_EMAIL: ${{ secrets.FROM_EMAIL }}
+      DB_NAME_DEV: ${{ secrets.DB_NAME_DEV }}
+      DB_USERNAME: ${{ secrets.DB_USERNAME }}
+      DB_USER_PASSWORD: ${{ secrets.DB_USER_PASSWORD }}
+      DB_HOST: ${{ secrets.DB_HOST }}
+      DB_PORT: ${{ secrets.DB_PORT }}
     strategy:
       max-parallel: 4
       matrix:
         python-version: [3.7, 3.8, 3.9]
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: github_actions
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5 
 
     steps:
     - uses: actions/checkout@v2
